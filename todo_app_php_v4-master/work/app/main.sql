@@ -6,7 +6,7 @@ CREATE TABLE todos (
 );
 
 INSERT INTO todos (title) VALUES ('aaa');
-INSERT INTO todos (title, is_done) VALUES ('bbb');
+INSERT INTO todos (title, is_done) VALUES ('bbb', true);
 INSERT INTO todos (title) VALUES ('ccc');
 
 SELECT * FROM todos;
