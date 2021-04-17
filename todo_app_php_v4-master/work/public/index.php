@@ -1,22 +1,40 @@
 <?php
 
-define('DSN', 'mysql:host=db;dbname=myapp;charset=utf8mb4');
-define('DB_USER', 'myappuser');
-define('DB_PASS', 'myapppass');
+	define('DSN', 'mysql:host=db;dbname=myapp;charset=utf8mb4');
+	define('DB_USER', 'myappuser');
+	define('DB_PASS', 'myapppass');
 
-try{
-	$pdo = new PDO(
-		DSN,
-		DB_USER,
-		DB_PASS,
-		[
-			PDO::ATTR_ERRMODE => POD::ERRMODE_EXCEPTION,
-		]
-	);
-} catch (PDOException $e) {
-	echo $e->getMessage();
+	try{
+		$pdo = new PDO(
+			DSN,
+			DB_USER,
+			DB_PASS,
+			[
+				//DB接続が失敗したらエラーを出す
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+
+				// Fetchモードのオプション　オブジェクト形式で結果を取得する
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+
+				PDO::ATTR_EMULATE_PREPARES => false
+			]
+		);
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+		exit;
+	}
+
+	function getTodos($pdo)
+	{
+		$stmt = $pdo->query("SELECT * FROM todos ORDER BY id DESC");
+		$todos = $stmt->fetchALL();
+		return $todos;
+	}
+
+	$todos = getTodos($pdo);
+	var_dump($todos);
 	exit;
-}
+
 
 ?>
 
