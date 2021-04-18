@@ -1,8 +1,15 @@
 <?php
 
+	session_start();
+
 	define('DSN', 'mysql:host=db;dbname=myapp;charset=utf8mb4');
 	define('DB_USER', 'myappuser');
 	define('DB_PASS', 'myapppass');
+	//define('SITE_URL', 'http://localhost:8562');
+	// ↓に書き換えられる
+	define('SITE_URL', 'http://' . $_SERVER['HTTP_HOST']);
+
+	createToken();
 
 	try{
 		$pdo = new PDO(
@@ -24,9 +31,35 @@
 		exit;
 	}
 
-	function h ($str)
+	function h($str)
 	{
 		return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+	}
+
+	function createToken()
+	{
+		if (!isset($_SESSION['token'])) {
+			$_SESSION['token'] = bin2hex(random_bytes(32));
+		}
+	}
+
+	function validateToken()
+	{
+		if (empty($_SESSION['token']) || $_SESSION['token'] !== filter_input(INPUT_POST, 'token')) {
+			exit('Invalid post request');
+		}
+	}
+
+	function addTodo($pdo)
+	{
+		$title = trim(filter_input(INPUT_POST, 'title'));
+		if ($title === '') {
+			return;
+		}
+
+		$stmt = $pdo->prepare("INSERT INTO todos (title) VALUES (:title)");
+		$stmt->bindValue('title', $title, PDO::PARAM_STR);
+		$stmt->execute();
 	}
 
 	function getTodos($pdo)
@@ -36,6 +69,16 @@
 		return $todos;
 	}
 
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		//フォームが送信された時に埋め込んだ値とセッションのトークンが一致するか
+		validateToken();
+
+		addTodo($pdo);
+
+		header('Location: ' . SITE_URL);
+		exit;
+
+	}
 	$todos = getTodos($pdo);
 
 ?>
@@ -51,6 +94,10 @@
 <body>
 	<h1>Todos</h1>
 
+	<form action="" method="post">
+		<input type="text" name="title" placeholder="Type new todo.">
+		<input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
+	</form>
 	<ul>
 		<?php foreach($todos as $todo): ?>
 			<li>
