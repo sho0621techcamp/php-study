@@ -2,13 +2,13 @@
 
 	require_once(__DIR__ . '/../app/config.php');
 
-	createToken();
+	Token::create();
 
-	$pdo = getPdoInstance();
+	$pdo = Database::getInstance();
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		//フォームが送信された時に埋め込んだ値とセッションのトークンが一致するか
-		validateToken();
+		Token::validate();
 
 		$action = filter_input(INPUT_GET, 'action');
 
