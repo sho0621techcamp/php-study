@@ -1,3 +1,12 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+main {
+  width: 320px;
+  margin: 302px auto;
+}
+
 ul {
   list-style: none;
   margin: 0;
@@ -11,4 +20,9 @@ li {
 .done {
   text-decoration: line-through;
   color: #ccc;
+}
+
+.delete {
+  color: #ccc;
+  cursor: pointer;
 }
