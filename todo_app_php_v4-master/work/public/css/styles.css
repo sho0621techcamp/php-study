@@ -2,6 +2,11 @@ body {
   font-family: Arial, sans-serif;
 }
 
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
 main {
   width: 320px;
   margin: 302px auto;
@@ -31,7 +36,7 @@ li {
   margin-bottom: 8px;
 }
 
-.done {
+input[type="checkbox"]:checked + span {
   text-decoration: line-through;
   color: #ccc;
 }
@@ -40,12 +45,15 @@ input[type="checkbox"] {
   margin-right: 8px;
 }
 
-.delete {
+.delete,
+.purge {
   color: #ccc;
   cursor: pointer;
+  font-size: 14px;
+  margin-left: auto;
+  padding-left: 8px;
+
 }
 
 .delete-form {
-  margin-left: auto;
-  padding-left: 8px;
 }

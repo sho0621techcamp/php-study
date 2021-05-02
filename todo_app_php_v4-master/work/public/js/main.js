@@ -4,7 +4,14 @@
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
-      checkbox.parentNode.submit();
+      fetch('?action=toggle', {
+        method: 'POST',
+        body: new URLSearchParams({
+          id: checkbox.dataset.d,
+          token: checkbox.dataset.token,
+        }),
+      });
+
     });
   });
 
@@ -14,7 +21,23 @@
       if (!confirm('Are you sure?')) {
         return;
       }
-      span.parentNode.submit();
+      fetch('?action=delete', {
+        method: 'POST',
+        body: new URLSearchParams({
+          id: span.dataset.id,
+          token: span.dataset.token,
+        }),
+      });
+
+      span.parentNode.remove();
     });
   });
+
+  const purge = document.querySelector('.purge');
+    purge.addEventListener('click', () => {
+      if (!confirm('Are you sure?')) {
+        return;
+      }
+      purge.parentNode.submit();
+    });
 }
